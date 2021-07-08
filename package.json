@@ -1,6 +1,6 @@
 {
 	"name": "@cylution/tailwind-rn",
-	"version": "3.0.2",
+	"version": "3.0.3-0",
 	"description": "Use Tailwind CSS in React Native projects",
 	"license": "MIT",
 	"repository": "vadimdemedes/tailwind-rn",
@@ -21,9 +21,9 @@
 		"test": "xo && tsd && ava"
 	},
 	"files": [
-	  "utils/build.js",
-	  "utils/cli-parse.js",
-	  "bin/cli.js",
+		"utils/build.js",
+		"utils/cli-parse.js",
+		"bin/cli.js",
 		"index.js",
 		"index.d.ts",
 		"styles.json"
