@@ -1,3 +1,58 @@
+# @cylution/tailwind-rn
+
+Original [tailwind-rn](https://github.com/vadimdemedes/tailwind-rn)
+
+This is a forked module and just provides extra cli params that not yet accepted to merge
+
+## cli
+
+You should install my package before create custom `tailwind-rn`
+> yarn add @cylution/tailwind-rn
+
+So you can try sth likes
+```text
+  Usage
+    $ create-tailwind-rn -r 12 -r 16
+
+  Options
+    --rem, -r        rem size in pixel (default: 16)
+    --outDir, -o    path of output dir (default: process.cwd())
+```
+will give you
+```text
+.
+├── tailwind-12.json // 1 rem = 12 pixel
+├── tailwind-16.json // 1 rem = 16 pixel
+├── tailwind-common.json // common tailwind that does not depend on rem
+```
+now you can use multiple styles base on device Dimensions
+```js
+// tailwind.js
+import { create } from 'tailwind-rn'
+import { Dimensions } from 'react-native'
+import commonStyles from 'tailwind-common.json'
+
+const { height, scale } = Dimensions.get('window')
+
+const remSize = height * scale <= 1366 ? 12 : 16
+const styles = {
+  12: require('./tailwind-12.json'),
+  16: require('./tailwind-16.json'),
+}
+
+const { tailwind: oTailwind, getColor } = create(Object.assign(commonStyles, styles[remSize]))
+const tailwind = (...classes) => {
+	return StyleSheet.compose(Object.assign({}, ...[].concat(...classes).map(style => typeof style === 'string' ? oTailwind(style) : style)))
+}
+const byRem = num => num * remSize
+export {
+	tailwind,
+	getColor,
+	remSize,
+	byRem,
+}
+```
+
 # tailwind-rn ![Status](https://github.com/vadimdemedes/tailwind-rn/workflows/test/badge.svg)
 
 > Use [Tailwind CSS](https://tailwindcss.com) in [React Native](https://reactnative.dev) projects

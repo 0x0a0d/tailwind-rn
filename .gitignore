@@ -1,4 +1,5 @@
 node_modules
 yarn.lock
-styles.json
+/styles.json
+/tailwind-*.json
 .idea

@@ -6,6 +6,7 @@ const tailwind = require('tailwindcss');
 const build = require('../utils/build');
 
 const flags = require('../utils/cli-parse')
+const path = require('path');
 
 const source = `
 @tailwind components;
@@ -16,7 +17,11 @@ postcss([tailwind])
 	.process(source, {from: undefined})
 	.then(({css}) => {
 		const styles = build(css, flags.rem);
-    fs.writeFileSync(flags.outFile, JSON.stringify(styles, null, '\t'));
+
+    fs.writeFileSync(path.resolve(flags.outDir, 'tailwind-common.json'), JSON.stringify(styles.common, null, '\t'));
+    Object.entries(styles.rems).forEach(([remSize, remStyles]) => {
+			fs.writeFileSync(path.resolve(flags.outDir, `tailwind-${remSize}.json`), JSON.stringify(remStyles, null, '\t'));
+		})
 	})
 	.catch(error => {
 		console.error('> Error occurred while generating styles');

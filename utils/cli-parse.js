@@ -1,34 +1,36 @@
 const meow = require('meow');
 const path = require('path');
+const fs = require('fs');
 
 const cli = meow(`
   Usage
-    $ create-tailwind-rn
+    $ create-tailwind-rn -r 12 -r 16 -r 20
 
   Options
-    --rem, -r        change rem size in pixel (default: 16)
-    --outFile, -o    change the path of the output file (default: **executing-folder**/styles.json)
+    --rem, -r        rem size in pixel (default: 16)
+    --outDir, -o    path of output dir (default: process.cwd())
 `, {
   flags: {
     rem: {
       type: 'number',
       alias: 'r',
-      default: 16
+      default: [16],
+			isMultiple: true
     },
-    outFile: {
+		outDir: {
       type: 'string',
       alias: 'o',
-      default: process.cwd() + '/styles.json',
+      default: process.cwd(),
     }
   }
 });
 
 const flags = {...cli.flags}
-if (flags.outFile.endsWith('/')) {
-  flags.outFile += 'styles.json'
-} else if (!flags.outFile.endsWith('.json')) {
-  flags.outFile += '.json'
+
+flags.outDir = path.resolve(process.cwd(), flags.outDir)
+
+if (!fs.existsSync(flags.outDir)) {
+	throw new Error(`outDir '${flags.outDir}' does not exist!`)
 }
-flags.outFile = path.resolve(process.cwd(), flags.outFile)
 
 module.exports = flags
